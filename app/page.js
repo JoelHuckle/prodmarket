@@ -3,7 +3,7 @@ import Search from "../components/Search";
 import Profile from "@/components/Profile";
 import Checkmark from "@/components/ui/Checkmark";
 import { Button } from "@/components/ui/button";
-import Handshake from "../public/handshake.png";
+import Benefit from "@/components/Benefit";
 
 const features = [
   {
@@ -22,12 +22,6 @@ const features = [
     caption: "caption",
   },
 ];
-
-const contracts = {
-  title: "Contracts to ensure peace of mind.",
-  caption:
-    "Every transaction of a service includes a contract to make sure you recieve the product you have paid for. No more instagram scams and failed promises!",
-};
 
 export default function Home() {
   return (
@@ -52,7 +46,7 @@ export default function Home() {
       </section>
 
       {/* features */}
-      <section className="padding-container">
+      <section className="padding-container mb-10">
         <h1 className="text-3xl text-accent-100 font-bold mb-5 pt-10">
           Welcome to Prodmarket.
         </h1>
@@ -95,16 +89,30 @@ export default function Home() {
       </section>
 
       {/* benefits */}
-      <section className="padding-container mt-10 bg-dark-200 h-[500px]">
-        <img
-          src="../public/handshake.png"
-          className="absolute bottom-[350px] left-[70%] lg:left-[80%] rotate-[10deg] w-[200px]"
-          alt="handshake"
-        />
-        <div className="flex flex-col gap-5">
-          <h2 className="text-2xl font-bold pt-10 z-50">{contracts.title}</h2>
-          <p>{contracts.caption}</p>
-          <img src={Handshake} className="" alt="handshake" />
+      <section className="">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <Benefit
+              title="Contracts to ensure peace of mind"
+              caption="Every transaction of a service includes a contract to make sure you recieve the product you have paid for. No more Instagram scams!"
+              icon="/handshake.png"
+            />
+          </div>
+          <div>
+            <Benefit
+              title="Market your services to a large audience"
+              caption="Generate money through marketing to a large audience through multiple service types"
+              icon="/home-money.png"
+              background="bg-dark-100"
+            />
+          </div>
+          <div>
+            <Benefit
+              title="Market your services to a large audience"
+              caption="Generate money through marketing to a large audience through multiple service types"
+              icon="/home-money.png"
+            />
+          </div>
         </div>
       </section>
     </main>
