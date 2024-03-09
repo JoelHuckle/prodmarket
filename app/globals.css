@@ -4,14 +4,48 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'Overused Grotesk';
+  src: url('/fonts/OverusedGrotesk-Light-BF64eeac18175cf.ttf') format('ttf');
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: 'Overused Grotesk';
+  src: url('/fonts/OverusedGrotesk-Roman-BF64eeac18184a5.ttf') format('ttf');
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'Overused Grotesk';
+  src: url('/fonts/OverusedGrotesk-Medium-BF64eeac18163be.ttf') format('ttf');
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: 'Overused Grotesk';
+  src: url('/fonts/OverusedGrotesk-SemiBold-BF64eeac17f0443.ttf') format('ttf');
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: 'Overused Grotesk';
+  src: url('/fonts/OverusedGrotesk-Bold-BF64eeac17f1b7f.ttf') format('ttf');
+  font-weight: 700;
+}
+
 @layer base {
   * {
     @apply box-border list-none p-0 m-0 scroll-smooth;
   }
 
   body {
-    @apply bg-dark-100 text-primary min-h-screen font-inter;
+    @apply bg-dark-100 text-primary min-h-screen;
   }
+}
+
+.font-grotesk{
+  font-family: 'Overused Grotesk'
 }
 
 @layer utilities {

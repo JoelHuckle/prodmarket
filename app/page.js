@@ -46,7 +46,7 @@ export default function Home() {
       </section>
 
       {/* features */}
-      <section className="padding-container mb-10">
+      <section className="padding-container mb-10 bg-gradient-to-t from-dark-100 to-dark-200 pb-10 lg:bg-gradient-to-t">
         <h1 className="text-3xl text-accent-100 font-bold mb-5 pt-10">
           Welcome to Prodmarket.
         </h1>
@@ -89,8 +89,8 @@ export default function Home() {
       </section>
 
       {/* benefits */}
-      <section className="padding-container py-10 bg-slate-900">
-        <div className="grid grid-cols-1 lg:grid-cols-3">
+      <section className="px-10 mb-16">
+        <div className="grid grid-cols-1 lg:grid-cols-3 mr-auto">
           <div>
             <Benefit
               title="Contracts to ensure peace of mind"
@@ -103,7 +103,8 @@ export default function Home() {
               title="Market your services to a large audience"
               caption="Generate money through marketing to a large audience through multiple service types"
               icon="/home-money.png"
-              style="lg:bottom-[70px]"
+              background="sm:border-t sm:border-b lg:border"
+              iconStyle=""
             />
           </div>
           <div>
@@ -113,6 +114,30 @@ export default function Home() {
               icon="/home-money.png"
             />
           </div>
+        </div>
+      </section>
+
+      {/* cta */}
+      <section className="padding-container lg:mx-40 py-12 grid grid-cols-1 md:grid-cols-2 lg:rounded-xl bg-gradient-to-br from-dark-100 to-cyan-700 via-dark-200">
+        <div className="lg:items-baseline justify-center gap-5 flex flex-col items-start sm:mb-10 lg:mb-0">
+          <h1 className="text-3xl font-bold text-accent-100">
+            Join the ProdMarket Community.
+          </h1>
+          <h1 className="text-3xl font-bold text-accent-100">
+            Build your Dreams.
+          </h1>
+          <div>
+            <Button className="hover:bg-slate-100 grid grid-cols-1 bg-white text-dark-100">
+              Join now
+            </Button>
+          </div>
+        </div>
+        <div className="h-[400px] w-[400px] overflow-hidden">
+          <img
+            src="/home-studio-mess.jpg"
+            alt="studio"
+            className="overflow-hidden"
+          />
         </div>
       </section>
     </main>
