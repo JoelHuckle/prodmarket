@@ -89,8 +89,8 @@ export default function Home() {
       </section>
 
       {/* benefits */}
-      <section className="">
-        <div className="grid grid-cols-1 md:grid-cols-3">
+      <section className="padding-container py-10 bg-slate-900">
+        <div className="grid grid-cols-1 lg:grid-cols-3">
           <div>
             <Benefit
               title="Contracts to ensure peace of mind"
@@ -103,6 +103,7 @@ export default function Home() {
               title="Market your services to a large audience"
               caption="Generate money through marketing to a large audience through multiple service types"
               icon="/home-money.png"
+              style="lg:bottom-[70px]"
             />
           </div>
           <div>
