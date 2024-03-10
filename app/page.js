@@ -8,18 +8,21 @@ import Benefit from "@/components/Benefit";
 const features = [
   {
     key: 1,
-    title: "Find industry producers to collab with",
-    caption: "Search for producers and create connections ",
+    title: "Find industry producers to collab with.",
+    caption:
+      "Search for producers and create connections, Search for producers and create connections.",
   },
   {
     key: 2,
-    title: "Subscribe to loop emails",
-    caption: "caption",
+    title: "Subscribe to loop emails.",
+    caption:
+      "Search for producers and create connections, Search for producers and create connections.",
   },
   {
     key: 3,
-    title: "Buy from producers with peace of mind",
-    caption: "caption",
+    title: "Buy from producers with peace of mind.",
+    caption:
+      "Search for producers and create connections, Search for producers and create connections.",
   },
 ];
 
@@ -46,7 +49,7 @@ export default function Home() {
       </section>
 
       {/* features */}
-      <section className="padding-container mb-10 bg-gradient-to-t from-dark-100 to-dark-200 pb-10 lg:bg-gradient-to-t">
+      <section className="padding-container mb-10 sm:bg-gradient-to-t from-dark-100 to-dark-200 pb-10 lg:bg-gradient-to-r pt-8 ">
         <h1 className="text-3xl text-accent-100 font-bold mb-5 pt-10">
           Welcome to Prodmarket.
         </h1>
@@ -56,8 +59,8 @@ export default function Home() {
             <div className="flex flex-col gap-5">
               {features.map((item) => (
                 <li key={item.key} className="flex">
-                  <Checkmark style="" />
-                  <div className="ml-5">
+                  <Checkmark style="w-[50px]" />
+                  <div className="relative left-2 lg:mr-24">
                     <p className="font-medium">{item.title}</p>
                     <p className="text-secondary-100 text-sm">{item.caption}</p>
                   </div>
@@ -70,8 +73,8 @@ export default function Home() {
             <div className="flex flex-col gap-5">
               {features.map((item) => (
                 <li key={item.key} className="flex">
-                  <Checkmark style="" />
-                  <div className="ml-5">
+                  <Checkmark style="w-[50px]" />
+                  <div className="relative left-2 lg:mr-24">
                     <p className="font-medium">{item.title}</p>
                     <p className="text-secondary-100 text-sm">{item.caption}</p>
                   </div>
