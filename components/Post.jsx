@@ -12,7 +12,7 @@ const Post = ({title, date, caption, url, likes=0, downloads=0, price=0}) => {
       <AudioPlayer src='/audio-preview.mp3'/>
 
       </div>
-      <div className='flex sm:flex-col md:flex-row mb-2 gap-4'>
+      <div className='flex sm:flex-col mb-2 gap-4'>
         <div className=''>
             <h1 className='text-lg font-medium'>LOOPS 10/03/24</h1>
             <p className='text-sm text-secondary-100 mb-2'>3 days ago</p>
@@ -29,13 +29,14 @@ const Post = ({title, date, caption, url, likes=0, downloads=0, price=0}) => {
         </Button>
         <div className='flex items-center gap-1'>
           {/* likes */}
-          <i><HeartSolid width={20} color='#3C82F6'/></i>
+          <i><HeartSolid width={20} color='#3C82F6' className='cursor-pointer hover:text-blue-600'/></i>
           <span className='text-accent-100 mr-2'>{likes}</span>
           {/* downloads */}
-          <i><Download width={20}  color='#3C82F6'/></i>
+          <i><Download width={20}  color='#3C82F6' className='cursor-pointer hover:text-blue-600'/></i>
           <span className='text-accent-100 mr-2'>{downloads}</span>
         </div>
         <audio src="/0360_SOLD_146_BPM_JHUX.mp3">hi</audio>
+
     </article>
   )
 }

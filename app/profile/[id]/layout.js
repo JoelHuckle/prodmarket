@@ -1,16 +1,25 @@
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { headers } from "next/headers";
 
-function Layout({ children }) {
+function Layout({ children, pfp = "/profile.png", banner = "/cover.png" }) {
+  const headersList = headers();
+  const pathname = headersList.get("x-invoke-path");
+  console.log(pathname);
+
+  const id = "darko";
+
   return (
     <div>
-      <section>
+      <p>{pathname}</p>
+      <section className="">
         <div className="overflow-hidden sm:h-[25vh] lg:h-[30vh]">
-          <img src="/home-shoes.jpg" alt="banner" className="w-screen" />
+          <img src={banner} alt="banner" className="w-screen" />
         </div>
         <div className="padding-container flex flex-center flex-col gap-1 relative bottom-[40px]">
           <div className="h-[120px] w-[120px] mb-5">
             <img
-              src="/blank-pfp.jpg"
+              src={pfp}
               alt="profile"
               className="border border-secondary-200 rounded-xl"
             />

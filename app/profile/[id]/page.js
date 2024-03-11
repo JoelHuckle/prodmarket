@@ -1,15 +1,19 @@
 "use client";
 
 import Post from "@/components/Post";
-import { Button } from "@/components/ui/button";
-import { usePathname } from "next/navigation";
+import Link from "next/link";
 
 function Profile() {
-  const pathname = usePathname().replace("/profile/", "");
-  console.log(pathname);
+  const id = "darko";
 
   return (
     <section>
+      <div className="flex gap-5 flex-center font-semibold text-sm text-center mt-6 relative bottom-[40px] border-b border-secondary-200 pb-3">
+        <Link href={`/profile/${id}`} className="underline">
+          Feed
+        </Link>
+        <Link href={`/profile/${id}/services`}>Services</Link>
+      </div>
       <section className="flex flex-col gap-7">
         <Post />
         <Post />
