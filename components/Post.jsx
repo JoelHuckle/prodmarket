@@ -4,9 +4,9 @@ import { HeartSolid, Download } from 'iconoir-react';
 import AudioPlayer from './AudioPlayer';
 import lock from '../public/lock.svg'
 
-const Post = ({title, date, caption, url, likes=0, downloads=0, price=0}) => {
+const Post = ({title, date, caption, url, likes=0, downloads=0, price=0, icon}) => {
   return (
-    <article className='mx-2 md:w-[70vw] lg:w-[40vw] px-10 lg:px-15 py-5 bg-gradient-to-br from-slate-900 to-dark-100 rounded-lg'>
+    <article className='relative mx-2 md:w-[70vw] lg:w-[40vw] px-10 lg:px-15 py-5 bg-gradient-to-br from-slate-900 to-dark-100 rounded-lg'>
       <div className='mb-4'>
       {/* preview */}
       <AudioPlayer src='/audio-preview.mp3'/>
@@ -35,7 +35,7 @@ const Post = ({title, date, caption, url, likes=0, downloads=0, price=0}) => {
           <i><Download width={20}  color='#3C82F6' className='cursor-pointer hover:text-blue-600'/></i>
           <span className='text-accent-100 mr-2'>{downloads}</span>
         </div>
-        <audio src="/0360_SOLD_146_BPM_JHUX.mp3">hi</audio>
+        <img src={icon} alt="" height={50} width={50} className={`absolute bottom-[90%] left-[92%] rounded-full ${icon ? 'absolute' : 'hidden'}`} />
 
     </article>
   )

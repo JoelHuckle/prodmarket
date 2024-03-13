@@ -32,9 +32,9 @@ const feed = ({ name = "user" }) => {
         <section className="py-8">
           <h2 className="text-xl font-bold">Recent posts</h2>
           <div className="relative top-3 right-[10px] flex flex-col gap-4">
-            <Post />
-            <Post />
-            <Post />
+            <Post icon="/blank-pfp.jpg" />
+            <Post icon="/blank-pfp.jpg" />
+            <Post icon="/blank-pfp.jpg" />
           </div>
         </section>
         <section className="py-8">

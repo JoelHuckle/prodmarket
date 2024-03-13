@@ -14,7 +14,7 @@ function Profile() {
         </Link>
         <Link href={`/profile/${id}/services`}>Services</Link>
       </div>
-      <section className="flex flex-col gap-7">
+      <section className="flex flex-center flex-col gap-7">
         <Post />
         <Post />
         <Post />
