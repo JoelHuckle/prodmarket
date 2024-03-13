@@ -42,6 +42,9 @@ const UserSchema = new mongoose.Schema({
     type: Array,
     default: [],
   },
+  lastPosted: {
+    type: Date,
+  },
 });
 
 module.exports = mongoose.model("User", UserSchema);
