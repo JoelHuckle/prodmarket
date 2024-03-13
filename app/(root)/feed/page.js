@@ -39,7 +39,7 @@ const feed = ({ name = "user" }) => {
         </section>
         <section className="py-8">
           <h2 className="text-xl font-bold">Followed Services</h2>
-          <div className="relative top-3 right-[10px] flex flex-col lg:flex-row flex-wrap gap-4">
+          <div className="relative top-3 right-[10px] flex flex-col md:flex-row flex-wrap gap-4">
             <Service icon="/blank-pfp.jpg" />
             <Service icon="/blank-pfp.jpg" />
             <Service icon="/blank-pfp.jpg" />
