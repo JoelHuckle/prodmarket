@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Search from "../components/Search";
+import Search from "@/components/Search";
 import Profile from "@/components/Profile";
 import Checkmark from "@/components/ui/Checkmark";
 import { Button } from "@/components/ui/button";
@@ -23,6 +23,21 @@ const features = [
     title: "Buy from producers with peace of mind.",
     caption:
       "Search for producers and create connections, Search for producers and create connections.",
+  },
+];
+
+const benefits = [
+  {
+    key: 1,
+    title: "",
+    caption: "",
+    icon: "",
+  },
+  {
+    key: 2,
+    title: "",
+    caption: "",
+    icon: "",
   },
 ];
 
@@ -95,6 +110,7 @@ export default function Home() {
       <section className="px-10 mb-16">
         <div className="grid grid-cols-1 lg:grid-cols-3 mr-auto">
           <div>
+            <ul></ul>
             <Benefit
               title="Contracts to ensure peace of mind"
               caption="Every transaction of a service includes a contract to make sure you recieve the product you have paid for. No more Instagram scams!"

@@ -6,7 +6,7 @@ import lock from '../public/lock.svg'
 
 const Post = ({title, date, caption, url, likes=0, downloads=0, price=0}) => {
   return (
-    <article className='mx-2 md:mx-[15vw] lg:mx-[20vw] px-10 lg:px-15 py-5 bg-gradient-to-br from-slate-900 to-dark-100 rounded-lg'>
+    <article className='mx-2 md:w-[70vw] lg:w-[40vw] px-10 lg:px-15 py-5 bg-gradient-to-br from-slate-900 to-dark-100 rounded-lg'>
       <div className='mb-4'>
       {/* preview */}
       <AudioPlayer src='/audio-preview.mp3'/>
