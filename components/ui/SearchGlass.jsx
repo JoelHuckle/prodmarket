@@ -11,7 +11,7 @@ const SearchGlass = ({ style }) => {
   strokeWidth="1.5"
   width="24"
   height="24"
-  color="#000000"
+  color="#F8FAFC"
 >
   <defs>
     <style>

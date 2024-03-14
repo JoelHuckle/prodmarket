@@ -9,7 +9,7 @@ const Search = () => {
         <h1 className='text-4xl font-bold'>Search For Producers</h1>
         <h3 className='text-secondary-100'>Find your next collaboration.</h3>
       </div>
-        <SearchBar />
+        <SearchBar style="w-[70%] max-w-[500px]"/>
     </div>
   )
 }

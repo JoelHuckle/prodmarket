@@ -3,11 +3,11 @@
 import React from 'react'
 import SearchGlass from './ui/SearchGlass'
 
-const SearchBar = () => {
+const SearchBar = ({style}) => {
   return (
-    <div>
-        <SearchGlass style=" relative top-[32px] left-[15px] w-[20px]"/>
-        <input type="text" placeholder='Search' className='bg-primary text-dark-100 py-2 px-12  rounded-full outline-none w-[70%] max-w-[500px] focus:border focus:border-secondary-100 focus:py-[7px] focus:px-[47px]'/>
+    <div className={`relative align-middle`}>
+        <SearchGlass style="absolute top-[4px] left-[12px] w-[18px]"/>
+        <input type="text" placeholder='Search' className={`${style} bg-dark-200 border text-primary border-secondary-200 py-[6px] px-10 text-sm rounded-full outline-none`}/>
     </div>
   )
 }
