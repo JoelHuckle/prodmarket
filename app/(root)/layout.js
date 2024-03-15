@@ -10,7 +10,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className="font-inter ">
+      <body className="font-inter relative">
         <Header style="sticky" />
         <main className="relative overflow-hidden">{children}</main>
       </body>

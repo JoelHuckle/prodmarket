@@ -6,7 +6,7 @@ import lock from '../public/lock.svg'
 
 const Post = ({title, date, caption, url, likes=0, downloads=0, price=0, icon}) => {
   return (
-    <article className='relative mx-2 md:w-[70vw] lg:w-[40vw] px-10 lg:px-15 py-5 bg-gradient-to-br from-slate-900 to-dark-100 rounded-lg'>
+    <article className='relative mx-2 md:w-[70vw] lg:w-[60vw] px-10 lg:px-15 py-5 bg-gradient-to-br from-slate-900 to-dark-100 rounded-lg'>
       <div className='mb-4'>
       {/* preview */}
       <AudioPlayer src='/audio-preview.mp3'/>
@@ -14,7 +14,7 @@ const Post = ({title, date, caption, url, likes=0, downloads=0, price=0, icon}) 
       </div>
       <div className='flex sm:flex-col mb-2 gap-4'>
         <div className=''>
-            <h1 className='text-lg font-medium'>LOOPS 10/03/24</h1>
+            <h1 className='text-lg font-semibold'>LOOPS 10/03/24</h1>
             <p className='text-sm text-secondary-100 mb-2'>3 days ago</p>
             <p className='text-sm'>50 + loops, in the style of ken yeat and more!</p>
         </div>
