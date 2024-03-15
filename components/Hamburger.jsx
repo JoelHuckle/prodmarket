@@ -31,6 +31,7 @@ const Hamburger = () => {
 
     const toggleMenu = () => {
         setIsOpen(!isOpen)
+        document.body.style.overflow = !isOpen ? 'hidden' : ''
     }
 
   return (
