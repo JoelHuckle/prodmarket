@@ -37,7 +37,6 @@ const Hamburger = () => {
   return (
     <main className='sm:block md:hidden transition-all relative'>
         <Image src='/hamburger.svg' height={30} width={30} className='invert cursor-pointer' onClick={toggleMenu}/>
-        {/* bg-slate-950 */}
         <div className={`fixed top-0 left-0 z-50 h-screen bg-slate-950 w-64 py-1 transform transition duration-300 ease-in-out ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
             <div className='flex gap-5 bg-dark-100 py-3 padding-container border-b border-secondary-200'>
                 <Image src="/x.svg" width={35} height={35} className='relative right-[2%] top-[1%] cursor-pointer' onClick={toggleMenu}/>

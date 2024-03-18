@@ -1,15 +1,13 @@
 import React from 'react'
 import { Button } from './ui/button'
-import { HeartSolid, Download } from 'iconoir-react';
-import AudioPlayer from './AudioPlayer';
-import lock from '../public/lock.svg'
+import Image from 'next/image'
+// import { HeartSolid, Download } from 'iconoir-react';
 
 const Post = ({title, date, caption, url, likes=0, downloads=0, price=0, icon}) => {
   return (
     <article className='relative mx-2 md:w-[70vw] lg:w-[45vw] flex-1 px-10 lg:px-15 py-5 bg-gradient-to-br from-slate-900 to-dark-100 rounded-lg'>
       <div className='mb-4'>
       {/* preview */}
-      <AudioPlayer src='/audio-preview.mp3'/>
 
       </div>
       <div className='flex sm:flex-col mb-2 gap-4'>
@@ -29,14 +27,13 @@ const Post = ({title, date, caption, url, likes=0, downloads=0, price=0, icon}) 
         </Button>
         <div className='flex items-center gap-1'>
           {/* likes */}
-          <i><HeartSolid width={20} color='#3C82F6' className='cursor-pointer hover:text-blue-600'/></i>
+          <Image src="/heart-icon.svg" height={15} width={15} className='fill-white cursor-pointer'/>
           <span className='text-accent-100 mr-2'>{likes}</span>
           {/* downloads */}
-          <i><Download width={20}  color='#3C82F6' className='cursor-pointer hover:text-blue-600'/></i>
+          <Image src="/eye-icon.svg" height={15} width={15} />
           <span className='text-accent-100 mr-2'>{downloads}</span>
         </div>
         <img src={icon} alt="" height={50} width={50} className={`absolute bottom-[90%] left-[92%] rounded-full ${icon ? 'absolute' : 'hidden'}`} />
-
     </article>
   )
 }

@@ -43,7 +43,7 @@ const benefits = [
 
 export default function Home() {
   return (
-    <main className="">
+    <main>
       <Search />
 
       {/* trending profiles */}
@@ -110,28 +110,23 @@ export default function Home() {
       <section className="px-10 mb-16">
         <div className="grid grid-cols-1 lg:grid-cols-3 mr-auto">
           <div>
-            <ul></ul>
             <Benefit
-              title="Contracts to ensure peace of mind"
-              caption="Every transaction of a service includes a contract to make sure you recieve the product you have paid for. No more Instagram scams!"
+              // title="Contracts to ensure peace of mind"
+              // caption="Every transaction of a service includes a contract to make sure you recieve the product you have paid for. No more Instagram scams!"
               icon="/handshake.png"
             />
           </div>
           <div>
             <Benefit
-              title="Market your services to a large audience"
-              caption="Generate money through marketing to a large audience through multiple service types"
+              // title="Market your services to a large "
+              // caption="Generate money through marketing to a large audience through multiple service types"
               icon="/home-money.png"
               background="sm:border-t sm:border-b lg:border"
               iconStyle=""
             />
           </div>
           <div>
-            <Benefit
-              title="Market your services to a large audience"
-              caption="Generate money through marketing to a large audience through multiple service types"
-              icon="/home-money.png"
-            />
+            <Benefit title="hi" caption="hi" icon="/home-money.png" />
           </div>
         </div>
       </section>

@@ -1,22 +1,20 @@
 import React from 'react'
 import { Button } from './ui/button'
-import { IconoirContext } from 'iconoir-react'
-import { icons } from 'lucide-react'
 
-const details = [
-    {
-        key: 0,
-        body: "monthly loops"
-    },
-    {
-        key: 1,
-        body: "sending beats out"
-    },
-    {
-        key: 2,
-        body: "midis"
-    },
-]
+// const details = [
+//     {
+//         key: 0,
+//         body: "monthly loops"
+//     },
+//     {
+//         key: 1,
+//         body: "sending beats out"
+//     },
+//     {
+//         key: 2,
+//         body: "midis"
+//     },
+// ]
 
 const Service = ({type, icon=""}) => {
   return (
@@ -29,9 +27,10 @@ const Service = ({type, icon=""}) => {
         <div>
             <h2 className='text-sm font-semibold mb-2'>Details:</h2>
             <ul className='list-disc marker:text-primary '>
-                {details.map(item => (
+                {/* {details.map(item => (
                     <li className='text-sm' key={item.key}>{item.body}</li>
-                ))}
+                ))} */}
+                hi
             </ul>
         </div>
         <img src={icon} alt="" height={50} width={50} className={`absolute bottom-[90%] left-[90%] rounded-full ${icon ? 'absolute' : 'hidden'}`} />

@@ -11,7 +11,7 @@ const ServiceSchema = new mongoose.Schema({
   },
   caption: {
     type: String,
-    require: true,
+    required: true,
   },
   likes: {
     type: Number,

@@ -1,5 +1,4 @@
 import React from 'react'
-import SearchGlass from './ui/SearchGlass'
 import SearchBar from './SearchBar'
 
 const Search = () => {

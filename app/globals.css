@@ -4,35 +4,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-  font-family: 'Overused Grotesk';
-  src: url('/fonts/OverusedGrotesk-Light-BF64eeac18175cf.ttf') format('ttf');
-  font-weight: 300;
-}
-
-@font-face {
-  font-family: 'Overused Grotesk';
-  src: url('/fonts/OverusedGrotesk-Roman-BF64eeac18184a5.ttf') format('ttf');
-  font-weight: 400;
-}
-
-@font-face {
-  font-family: 'Overused Grotesk';
-  src: url('/fonts/OverusedGrotesk-Medium-BF64eeac18163be.ttf') format('ttf');
-  font-weight: 500;
-}
-
-@font-face {
-  font-family: 'Overused Grotesk';
-  src: url('/fonts/OverusedGrotesk-SemiBold-BF64eeac17f0443.ttf') format('ttf');
-  font-weight: 600;
-}
-
-@font-face {
-  font-family: 'Overused Grotesk';
-  src: url('/fonts/OverusedGrotesk-Bold-BF64eeac17f1b7f.ttf') format('ttf');
-  font-weight: 700;
-}
 
 @layer base {
   * {
@@ -42,48 +13,6 @@
   body {
     @apply bg-dark-100 text-primary min-h-screen;
   }
-}
-
-.font-grotesk{
-  font-family: 'Overused Grotesk'
-}
-
-.audioPlayer {
-  background-color: transparent; /* Set background color to transparent */
-  border: none; /* Remove border */
-}
-
-/* Hide volume control */
-.audioPlayer::-webkit-media-controls-volume-slider {
-  display: none;
-}
-
-/* Hide time display */
-.audioPlayer::-webkit-media-controls-current-time-display,
-.audioPlayer::-webkit-media-controls-time-remaining-display {
-  display: none;
-}
-
-/* Hide remaining duration display */
-.audioPlayer::-webkit-media-controls-timeline,
-.audioPlayer::-webkit-media-controls-seek-back-button,
-.audioPlayer::-webkit-media-controls-seek-forward-button {
-  visibility: hidden;
-}
-
-/* Show only play button and progress bar */
-.audioPlayer::-webkit-media-controls-play-button,
-.audioPlayer::-webkit-media-controls-play-button:hover,
-.audioPlayer::-webkit-media-controls-play-button:focus,
-.audioPlayer::-webkit-media-controls-play-button:active,
-.audioPlayer::-webkit-media-controls-timeline {
-  visibility: visible;
-}
-
-.audioPlayer::-webkit-media-controls-play-button,
-.audioPlayer::-webkit-media-controls-panel {
-  background-color: transparent;
-  color: transparent;
 }
 
 @layer utilities {

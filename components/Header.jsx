@@ -1,29 +1,13 @@
 import React from 'react'
 import { Button } from "@/components/ui/button"
 import Link from 'next/link';
-import SearchGlass from './ui/SearchGlass'
 import SearchBar from './SearchBar';
 import Hamburger from './Hamburger';
-
-
-
-
-const navLinks = [
-    {
-        id: 1,
-        title: "upload"
-    },
-    {
-      id: 2,
-      title: "upload"
-  },
-]
-
 
 const Header = ({ style }) => {
   return (
     <nav className="relative flex flex-col">
-      <section className='flex items-center justify-between py-2 border-b border-secondary-200 w-screen bg-dark-200/30 backdrop-blur-sm padding-container z-50'>
+      <section className='flex items-center justify-between py-4 border-b border-secondary-200 w-screen bg-dark-200/30 backdrop-blur-sm padding-container z-50'>
       <div className='flex items-center gap-6'>
 
       <Hamburger />
