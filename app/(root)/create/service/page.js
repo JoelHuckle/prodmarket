@@ -14,6 +14,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import Link from "next/link";
@@ -24,72 +31,90 @@ const formSchema = z.object({
   // }),
 });
 
-const Create = () => {
+const CreateService = () => {
   // 1. Define your form.
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      preview: "",
-      link: "",
+      type: "",
+      "wait-time": "",
       title: "",
       caption: "",
-      price: 0,
+      price: "",
     },
   });
 
   function onSubmit() {
-    const formData = form.getValues();
-    console.log(formData);
+    console.log(form.getValues());
   }
 
   const date = new Date().toISOString().split("T")[0];
+
   return (
     <main className="padding-container">
       <h1 className="text-2xl font-semibold py-7 lg:ml-32">Create</h1>
       <div className="flex justify-around flex-1 text-center lg:flex-col lg:fixed top-[22.7%] left-9 gap-3 mb-7">
-        <h2 className="bg-secondary-200 py-2 cursor-pointer rounded-lg transition-all sm:w-[50%] lg:w-36">
-          Loops
-        </h2>
         <Link
+          href="/create"
+          className=" py-2 cursor-pointer rounded-lg transition-all sm:w-[50%] lg:w-36"
+        >
+          Loops
+        </Link>
+        <h2
           href="/create/service"
-          className="py-2 cursor-pointer rounded-lg transition-all sm:w-[50%] lg:w-36"
+          className=" bg-secondary-200 py-2 cursor-pointer rounded-lg transition-all sm:w-[50%] lg:w-36"
         >
           Service
-        </Link>
+        </h2>
       </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="lg:ml-32">
-          {/* Loop specific (link + preview)*/}
+          {/* service specific (service + wait time)*/}
           <div className="mb-7">
             <div className="flex flex-1 gap-6">
               <FormField
                 control={form.control}
-                name="preview"
+                name="service-type"
                 render={({ field }) => (
                   <FormItem className="w-[50%]">
-                    <FormLabel>Preview</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Title"
-                        type="File"
-                        {...field}
-                        className=""
-                      />
-                    </FormControl>
+                    <FormLabel>Type</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      required
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Service type" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="lab">Labs</SelectItem>
+                        <SelectItem value="loops-monthly">
+                          Monthly loops subscription
+                        </SelectItem>
+                        <SelectItem value="lifetime loops">
+                          Lifetime Loops
+                        </SelectItem>
+                        <SelectItem value="vfx">Vfx</SelectItem>
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
               />
               <FormField
                 control={form.control}
-                name="link"
+                name="wait-time"
                 render={({ field }) => (
                   <FormItem className="w-[50%]">
-                    <FormLabel>Link (required)</FormLabel>
+                    <FormLabel>Max wait time (days)</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="dropbox, google drive, etc..."
                         {...field}
+                        type="number"
+                        placeholder="2-3"
+                        step="1"
                         required
                       />
                     </FormControl>
@@ -169,4 +194,4 @@ const Create = () => {
   );
 };
 
-export default Create;
+export default CreateService;

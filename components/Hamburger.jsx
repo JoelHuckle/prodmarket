@@ -6,23 +6,18 @@ import React, { useState } from 'react'
 const navigation = [
     {
         id:1,
-        title:'profile',
+        title:'Profile',
         url:"/profile/darko"
     },
     {
         id:2,
-        title:'feed',
+        title:'Feed',
         url:"/feed"
     },
     {
         id:3,
-        title:'create',
+        title:'Create',
         url:"/create"
-    },
-    {
-        id:4,
-        title:'link4',
-        url:""
     },
 ]
 

@@ -4,6 +4,24 @@ import Link from 'next/link';
 import SearchBar from './SearchBar';
 import Hamburger from './Hamburger';
 
+const navigation = [
+  {
+      id:1,
+      title:'Profile',
+      url:"/profile/darko"
+  },
+  {
+      id:2,
+      title:'Feed',
+      url:"/feed"
+  },
+  {
+      id:3,
+      title:'Create',
+      url:"/create"
+  },
+]
+
 const Header = ({ style }) => {
   return (
     <nav className="relative flex flex-col">
@@ -22,7 +40,11 @@ const Header = ({ style }) => {
         </form>
       </div>
       </div>
-      <div className="hidden md:flex">links</div>
+      <div className="hidden md:flex gap-[5vw] lg:gap-[7vw] font-medium">
+        {navigation.map((item) => (
+          <Link key={item.id} href={item.url} className='hover:text-accent-100 transition-all'>{item.title}</Link>
+        ))}
+      </div>
 
         <div className="">
           <Button className="text-primary bg-transparent hover:bg-dark-200 border border-primary">
