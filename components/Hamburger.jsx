@@ -16,8 +16,8 @@ const navigation = [
     },
     {
         id:3,
-        title:'upload',
-        url:""
+        title:'create',
+        url:"/create"
     },
     {
         id:4,

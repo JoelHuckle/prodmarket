@@ -73,7 +73,7 @@ export default function Home() {
             <h3 className="font-bold text-lg mb-4">Buying</h3>
             <div className="flex flex-col gap-5">
               {features.map((item) => (
-                <li key={item.key} className="flex">
+                <li key={item.key} className="flex mr-3">
                   <Checkmark style="w-[50px]" />
                   <div className="relative left-2 lg:mr-24">
                     <p className="font-medium">{item.title}</p>
@@ -87,7 +87,7 @@ export default function Home() {
             <h3 className="font-bold text-lg mb-4">Selling</h3>
             <div className="flex flex-col gap-5">
               {features.map((item) => (
-                <li key={item.key} className="flex">
+                <li key={item.key} className="flex mr-3">
                   <Checkmark style="w-[50px]" />
                   <div className="relative left-2 lg:mr-24">
                     <p className="font-medium">{item.title}</p>
@@ -111,22 +111,26 @@ export default function Home() {
         <div className="grid grid-cols-1 lg:grid-cols-3 mr-auto">
           <div>
             <Benefit
-              // title="Contracts to ensure peace of mind"
-              // caption="Every transaction of a service includes a contract to make sure you recieve the product you have paid for. No more Instagram scams!"
+              title="Contracts to ensure peace of mind"
+              caption="Every transaction of a service includes a contract to make sure you recieve the product you have paid for. No more Instagram scams!"
               icon="/handshake.png"
             />
           </div>
           <div>
             <Benefit
-              // title="Market your services to a large "
-              // caption="Generate money through marketing to a large audience through multiple service types"
+              title="Market your services to a large "
+              caption="Generate money through marketing to a large audience through multiple service types"
               icon="/home-money.png"
               background="sm:border-t sm:border-b lg:border"
-              iconStyle=""
             />
           </div>
           <div>
-            <Benefit title="hi" caption="hi" icon="/home-money.png" />
+            <Benefit
+              title="Market your services to a large "
+              caption="Generate money through marketing to a large audience through multiple service types"
+              icon="/home-money.png"
+              background="sm:border-t lg:border"
+            />
           </div>
         </div>
       </section>

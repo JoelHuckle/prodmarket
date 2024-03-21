@@ -1,7 +1,7 @@
 "use client"
 import Image from "next/image";
 
-const Profile = ({url, thumbnail="/profile.png", name, credits}) => {
+const Profile = ({url="/profile/1", thumbnail="/profile.png", name, credits}) => {
   return (
     <a href={url} className='relative flex flex-col gap-3 hover:bg-secondary-200 hover:border hover:px-[7px] hover:py-[11px] border-secondary-100 w-fit px-2 py-3 rounded-md cursor-pointer'>
       <div className="h-[170px] w-[170px] ">
