@@ -60,10 +60,7 @@ const CreateService = () => {
         >
           Loops
         </Link>
-        <h2
-          href="/create/service"
-          className=" bg-secondary-200 py-2 cursor-pointer rounded-lg transition-all sm:w-[50%] lg:w-36"
-        >
+        <h2 className=" bg-secondary-200 py-2 cursor-pointer rounded-lg transition-all sm:w-[50%] lg:w-36">
           Service
         </h2>
       </div>

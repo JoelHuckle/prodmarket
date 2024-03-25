@@ -25,9 +25,12 @@ const PostSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  download: {
+  url: {
     type: String,
     required: true,
+  },
+  preview: {
+    type: String,
   },
   createdAt: {
     type: Date,

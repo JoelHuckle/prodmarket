@@ -1,10 +1,8 @@
-"use client";
-
 import Post from "@/components/Post";
 import Link from "next/link";
 
 function Profile() {
-  const id = "darko";
+  const id = ":id";
 
   return (
     <section>

@@ -1,5 +1,10 @@
 import { Button } from "@/components/ui/button";
-function Layout({ children, pfp = "/profile.png", banner = "/cover.png" }) {
+
+function ProfileLayout({
+  children,
+  pfp = "/profile.png",
+  banner = "/cover.png",
+}) {
   return (
     <div>
       <section className="">
@@ -30,4 +35,4 @@ function Layout({ children, pfp = "/profile.png", banner = "/cover.png" }) {
   );
 }
 
-export default Layout;
+export default ProfileLayout;

@@ -2,7 +2,7 @@ import Service from "@/components/Service";
 import Link from "next/link";
 
 const services = () => {
-  const id = "darko";
+  const id = ":id";
 
   return (
     <main className="lg:px-4">

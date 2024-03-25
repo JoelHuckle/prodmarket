@@ -7,7 +7,7 @@ const navigation = [
     {
         id:1,
         title:'Profile',
-        url:"/profile/darko"
+        url:"/profile/:id"
     },
     {
         id:2,

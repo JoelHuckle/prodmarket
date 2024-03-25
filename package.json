@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "server": "nodemon ./backend/server.js",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -15,6 +16,8 @@
     "@radix-ui/react-slot": "^1.0.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.1",
     "iconoir-react": "^7.5.0",
     "lucide-react": "^0.358.0",
     "mongoose": "^8.2.1",

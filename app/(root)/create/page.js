@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useRouter } from "next/navigation";
 
 // ui imports
 import { Button } from "@/components/ui/button";
@@ -25,7 +26,9 @@ const formSchema = z.object({
 });
 
 const Create = () => {
-  // 1. Define your form.
+  const router = useRouter();
+
+  // Define form
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -37,12 +40,32 @@ const Create = () => {
     },
   });
 
-  function onSubmit() {
-    const formData = form.getValues();
-    console.log(formData);
-  }
+  const onSubmit = async () => {
+    try {
+      const formData = form.getValues();
+      const res = await fetch("http://localhost:4000/post/createPost", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!res.ok) {
+        throw new Error(`HTTP error! Status: ${res.status}`);
+      }
+      const resData = await res.json();
+      router.push("/profile/darko");
+
+      // Handle successful response here
+    } catch (error) {
+      console.error("There was a problem with the fetch operation:", error);
+      // Handle error here
+    }
+  };
 
   const date = new Date().toISOString().split("T")[0];
+
   return (
     <main className="padding-container">
       <h1 className="text-2xl font-semibold py-7 lg:ml-32">Create</h1>
