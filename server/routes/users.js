@@ -1,8 +1,26 @@
+// routes/users.js
 const express = require("express");
 const router = express.Router();
+const { protect, isSeller } = require("../middleware/auth");
+const {
+  getUserById,
+  getUserByUsername,
+  updateProfile,
+  becomeSeller,
+  updateSellerInfo,
+  getUserStats,
+} = require("../controllers/userController");
 
-router.get("/", (req, res) => {
-  res.json({ message: "Users endpoint" });
-});
+// Public routes
+router.get("/:id", getUserById);
+router.get("/username/:username", getUserByUsername);
+router.get("/:id/stats", getUserStats);
+
+// Protected routes
+router.put("/profile", protect, updateProfile);
+router.post("/become-seller", protect, becomeSeller);
+
+// Seller-only routes
+router.put("/seller-info", protect, isSeller, updateSellerInfo);
 
 module.exports = router;
