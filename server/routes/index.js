@@ -7,6 +7,7 @@ const serviceRoutes = require("./services");
 const orderRoutes = require("./orders");
 const paymentRoutes = require("./payments");
 const fileRoutes = require("./files");
+const contractRoutes = require("./contracts");
 
 router.use("/auth", authRoutes);
 router.use("/users", userRoutes);
@@ -14,5 +15,6 @@ router.use("/services", serviceRoutes);
 router.use("/orders", orderRoutes);
 router.use("/payments", paymentRoutes);
 router.use("/files", fileRoutes);
+router.use("/contracts", contractRoutes);
 
 module.exports = router;

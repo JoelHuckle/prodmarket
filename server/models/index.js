@@ -39,6 +39,11 @@ Service.hasMany(Order, { foreignKey: "service_id" });
 Order.belongsTo(User, { foreignKey: "buyer_id", as: "buyer" });
 Order.belongsTo(User, { foreignKey: "seller_id", as: "seller" });
 Order.belongsTo(Service, { foreignKey: "service_id", as: "service" });
+Order.hasOne(Contract, { foreignKey: "order_id", as: "contract" });
+
+Contract.belongsTo(Order, { foreignKey: "order_id", as: "order" });
+Contract.belongsTo(User, { foreignKey: "buyer_id", as: "buyer" });
+Contract.belongsTo(User, { foreignKey: "seller_id", as: "seller" });
 
 module.exports = {
   sequelize,
