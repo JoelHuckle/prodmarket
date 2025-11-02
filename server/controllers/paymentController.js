@@ -427,3 +427,89 @@ exports.getConnectStatus = async (req, res) => {
     });
   }
 };
+
+// ==========================================
+// TEST ENDPOINT - REMOVE IN PRODUCTION
+// ==========================================
+exports.testCreateOrder = async (req, res) => {
+  try {
+    const { service_id } = req.body;
+
+    if (!service_id) {
+      return res.status(400).json({
+        success: false,
+        error: "Service ID is required",
+      });
+    }
+
+    const service = await Service.findByPk(service_id);
+    if (!service) {
+      return res.status(404).json({
+        success: false,
+        error: "Service not found",
+      });
+    }
+
+    const amounts = calculateAmounts(service.price);
+    const orderNumber = `TEST-ORD-${Date.now()}-${Math.random()
+      .toString(36)
+      .substr(2, 9)
+      .toUpperCase()}`;
+
+    let orderStatus =
+      service.type === "collaboration" ? "awaiting_upload" : "completed";
+    let escrowStatus = service.type === "collaboration" ? "held" : null;
+    let deliveryDeadline =
+      service.type === "collaboration"
+        ? new Date(
+            Date.now() + service.delivery_time_days * 24 * 60 * 60 * 1000
+          )
+        : null;
+
+    const order = await Order.create({
+      order_number: orderNumber,
+      buyer_id: req.user.id,
+      seller_id: service.seller_id,
+      service_id: service.id,
+      status: orderStatus,
+      amount: amounts.amount,
+      platform_fee: amounts.platformFee,
+      seller_amount: amounts.sellerAmount,
+      stripe_payment_intent_id: "TEST_" + Date.now(),
+      escrow_status: escrowStatus,
+      delivery_deadline: deliveryDeadline,
+    });
+
+    await Transaction.create({
+      order_id: order.id,
+      buyer_id: req.user.id,
+      seller_id: service.seller_id,
+      type: "purchase",
+      amount: amounts.amount,
+      platform_fee: amounts.platformFee,
+      stripe_payment_id: "TEST_" + Date.now(),
+      status: "completed",
+    });
+
+    service.total_sales += 1;
+    await service.save();
+
+    res.status(201).json({
+      success: true,
+      order: {
+        id: order.id,
+        order_number: order.order_number,
+        status: order.status,
+        amount: order.amount,
+        escrow_status: order.escrow_status,
+      },
+      message: "TEST ORDER created (no real payment)",
+    });
+  } catch (error) {
+    console.error("Test Create Order Error:", error);
+    res.status(500).json({
+      success: false,
+      error: error.message,
+    });
+  }
+};
