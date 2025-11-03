@@ -8,6 +8,7 @@ const orderRoutes = require("./orders");
 const paymentRoutes = require("./payments");
 const fileRoutes = require("./files");
 const contractRoutes = require("./contracts");
+const subscriptionRoutes = require("./subscriptions");
 
 router.use("/auth", authRoutes);
 router.use("/users", userRoutes);
@@ -16,5 +17,6 @@ router.use("/orders", orderRoutes);
 router.use("/payments", paymentRoutes);
 router.use("/files", fileRoutes);
 router.use("/contracts", contractRoutes);
+router.use("/subscriptions", subscriptionRoutes);
 
 module.exports = router;

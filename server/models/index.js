@@ -45,6 +45,19 @@ Contract.belongsTo(Order, { foreignKey: "order_id", as: "order" });
 Contract.belongsTo(User, { foreignKey: "buyer_id", as: "buyer" });
 Contract.belongsTo(User, { foreignKey: "seller_id", as: "seller" });
 
+Subscription.belongsTo(User, { foreignKey: "buyer_id", as: "buyer" });
+Subscription.belongsTo(User, { foreignKey: "seller_id", as: "seller" });
+Subscription.belongsTo(Service, { foreignKey: "service_id", as: "service" });
+
+SubscriptionPack.belongsTo(Service, {
+  foreignKey: "service_id",
+  as: "service",
+});
+SubscriptionPack.belongsTo(User, { foreignKey: "seller_id", as: "seller" });
+
+Service.hasMany(Subscription, { foreignKey: "service_id" });
+Service.hasMany(SubscriptionPack, { foreignKey: "service_id" });
+
 module.exports = {
   sequelize,
   User,

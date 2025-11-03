@@ -163,7 +163,6 @@ exports.confirmPayment = async (req, res) => {
     if (service.type === "collaboration") {
       orderStatus = "awaiting_upload";
       escrowStatus = "held";
-      // Set delivery deadline (14 days from now)
       deliveryDeadline = new Date(
         Date.now() + service.delivery_time_days * 24 * 60 * 60 * 1000
       );
@@ -201,6 +200,28 @@ exports.confirmPayment = async (req, res) => {
     // Increment service total sales
     service.total_sales += 1;
     await service.save();
+
+    // Auto-generate contract for collaborations
+    if (service.type === "collaboration") {
+      try {
+        const contractController = require("./contractController");
+
+        const mockReq = {
+          params: { orderId: order.id },
+          user: req.user,
+        };
+        const mockRes = {
+          status: () => ({ json: () => {} }),
+        };
+
+        await contractController.generateContract(mockReq, mockRes);
+        console.log(`✓ Contract generated for order ${order.id}`);
+      } catch (contractError) {
+        // Don't fail the order if contract generation fails
+        console.error("Contract generation failed:", contractError.message);
+        // Contract can be generated later manually
+      }
+    }
 
     // For instant products, transfer money immediately
     if (service.type !== "collaboration") {
