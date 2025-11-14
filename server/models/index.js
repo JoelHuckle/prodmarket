@@ -69,6 +69,19 @@ User.hasMany(Download, { foreignKey: "user_id" });
 Order.hasMany(Download, { foreignKey: "order_id" });
 SubscriptionPack.hasMany(Download, { foreignKey: "subscription_pack_id" });
 
+Dispute.belongsTo(Order, { foreignKey: "order_id", as: "order" });
+Dispute.belongsTo(User, { foreignKey: "raised_by_user_id", as: "raisedBy" });
+Dispute.belongsTo(User, {
+  foreignKey: "resolved_by_admin_id",
+  as: "resolvedBy",
+});
+
+Order.hasMany(Dispute, { foreignKey: "order_id" });
+User.hasMany(Dispute, {
+  foreignKey: "raised_by_user_id",
+  as: "raisedDisputes",
+});
+
 module.exports = {
   sequelize,
   User,
