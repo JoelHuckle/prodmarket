@@ -1,11 +1,21 @@
 // controllers/subscriptionController.js
-const { Subscription, SubscriptionPack, Service, User } = require("../models");
 const stripe = require("../config/stripe");
+const {
+  Subscription,
+  SubscriptionPack,
+  Service,
+  User,
+  Transaction,
+} = require("../models");
+const { Op } = require("sequelize");
+
+// Platform fee percentage (8%)
+const PLATFORM_FEE_PERCENT = parseFloat(process.env.PLATFORM_FEE_PERCENT) || 8;
 
 /**
  * @desc    Create new subscription
  * @route   POST /api/subscriptions
- * @access  Private
+ * @access  Private (Buyer)
  */
 exports.createSubscription = async (req, res) => {
   try {
@@ -18,16 +28,8 @@ exports.createSubscription = async (req, res) => {
       });
     }
 
-    // Get service details
-    const service = await Service.findByPk(service_id, {
-      include: [
-        {
-          model: User,
-          as: "seller",
-          attributes: ["id", "stripe_account_id"],
-        },
-      ],
-    });
+    // Get service
+    const service = await Service.findByPk(service_id);
 
     if (!service) {
       return res.status(404).json({
@@ -36,15 +38,22 @@ exports.createSubscription = async (req, res) => {
       });
     }
 
-    // Verify service is subscription type
+    // Verify service type is subscription
     if (service.type !== "subscription") {
       return res.status(400).json({
         success: false,
-        error: "Service is not a subscription",
+        error: "Service must be of type 'subscription'",
       });
     }
 
-    // Check if user already has active subscription for this service
+    if (!service.is_active) {
+      return res.status(400).json({
+        success: false,
+        error: "Service is not available",
+      });
+    }
+
+    // Check if user already has active subscription to this service
     const existingSubscription = await Subscription.findOne({
       where: {
         buyer_id: req.user.id,
@@ -60,57 +69,26 @@ exports.createSubscription = async (req, res) => {
       });
     }
 
-    // Get or create Stripe customer
-    const buyer = await User.findByPk(req.user.id);
-    let customerId = buyer.stripe_customer_id;
-
-    if (!customerId) {
-      const customer = await stripe.customers.create({
-        email: buyer.email,
-        name: buyer.display_name || buyer.username,
-        metadata: {
-          user_id: buyer.id,
-          username: buyer.username,
-        },
-      });
-      customerId = customer.id;
-      buyer.stripe_customer_id = customerId;
-      await buyer.save();
-    }
-
-    // Attach payment method to customer (if provided)
-    if (payment_method_id) {
-      await stripe.paymentMethods.attach(payment_method_id, {
-        customer: customerId,
-      });
-
-      // Set as default payment method
-      await stripe.customers.update(customerId, {
-        invoice_settings: {
-          default_payment_method: payment_method_id,
-        },
-      });
-    }
+    // Calculate amounts
+    const amount = parseFloat(service.price);
+    const platformFee = (amount * PLATFORM_FEE_PERCENT) / 100;
+    const sellerAmount = amount - platformFee;
 
     // Create Stripe subscription
     const stripeSubscription = await stripe.subscriptions.create({
-      customer: customerId,
+      customer: req.user.stripe_customer_id || "cus_test", // Use test customer if none
       items: [
         {
           price_data: {
             currency: "usd",
             product_data: {
               name: service.title,
-              description: service.description,
-              metadata: {
-                service_id: service.id,
-                service_type: "subscription",
-              },
+              description: `Monthly subscription to ${service.title}`,
             },
+            unit_amount: Math.round(amount * 100), // Convert to cents
             recurring: {
               interval: "month",
             },
-            unit_amount: Math.round(parseFloat(service.price) * 100), // Convert to cents
           },
         },
       ],
@@ -118,9 +96,9 @@ exports.createSubscription = async (req, res) => {
         service_id: service.id,
         buyer_id: req.user.id,
         seller_id: service.seller_id,
+        platform_fee: platformFee.toFixed(2),
+        seller_amount: sellerAmount.toFixed(2),
       },
-      // Application fee (8% platform fee)
-      application_fee_percent: 8,
     });
 
     // Create subscription record
@@ -138,30 +116,21 @@ exports.createSubscription = async (req, res) => {
       ),
     });
 
-    // Fetch complete subscription with relationships
-    const completeSubscription = await Subscription.findByPk(subscription.id, {
-      include: [
-        {
-          model: User,
-          as: "buyer",
-          attributes: ["id", "username", "display_name", "avatar_url"],
-        },
-        {
-          model: User,
-          as: "seller",
-          attributes: ["id", "username", "display_name", "avatar_url"],
-        },
-        {
-          model: Service,
-          as: "service",
-          attributes: ["id", "title", "description", "price", "type"],
-        },
-      ],
+    // Create initial transaction
+    await Transaction.create({
+      order_id: null, // Subscriptions don't have orders
+      buyer_id: req.user.id,
+      seller_id: service.seller_id,
+      type: "subscription",
+      amount: amount.toFixed(2),
+      platform_fee: platformFee.toFixed(2),
+      stripe_payment_id: stripeSubscription.id,
+      status: "completed",
     });
 
     res.status(201).json({
       success: true,
-      subscription: completeSubscription,
+      subscription,
       message: "Subscription created successfully",
     });
   } catch (error) {
@@ -175,36 +144,24 @@ exports.createSubscription = async (req, res) => {
 };
 
 /**
- * @desc    Get user's subscriptions
+ * @desc    Get all subscriptions for current user
  * @route   GET /api/subscriptions/my
  * @access  Private
  */
 exports.getMySubscriptions = async (req, res) => {
   try {
-    const { role = "buyer", status } = req.query;
+    const { status } = req.query;
 
-    // Build where clause
-    const where = {};
-    if (role === "buyer") {
-      where.buyer_id = req.user.id;
-    } else if (role === "seller") {
-      where.seller_id = req.user.id;
-    }
+    const where = { buyer_id: req.user.id };
 
     if (status) {
       where.status = status;
     }
 
-    // Fetch subscriptions
     const subscriptions = await Subscription.findAll({
       where,
       order: [["created_at", "DESC"]],
       include: [
-        {
-          model: User,
-          as: "buyer",
-          attributes: ["id", "username", "display_name", "avatar_url"],
-        },
         {
           model: User,
           as: "seller",
@@ -219,7 +176,7 @@ exports.getMySubscriptions = async (req, res) => {
         {
           model: Service,
           as: "service",
-          attributes: ["id", "title", "description", "price", "type"],
+          attributes: ["id", "title", "description", "type", "price"],
         },
       ],
     });
@@ -243,24 +200,24 @@ exports.getMySubscriptions = async (req, res) => {
  * @route   GET /api/subscriptions/:id
  * @access  Private (Buyer or Seller)
  */
-exports.getSubscription = async (req, res) => {
+exports.getSubscriptionById = async (req, res) => {
   try {
     const subscription = await Subscription.findByPk(req.params.id, {
       include: [
         {
           model: User,
           as: "buyer",
-          attributes: ["id", "username", "display_name", "avatar_url", "email"],
+          attributes: ["id", "username", "display_name", "email", "avatar_url"],
         },
         {
           model: User,
           as: "seller",
-          attributes: ["id", "username", "display_name", "avatar_url", "email"],
+          attributes: ["id", "username", "display_name", "email", "avatar_url"],
         },
         {
           model: Service,
           as: "service",
-          attributes: ["id", "title", "description", "price", "type"],
+          attributes: ["id", "title", "description", "type", "price"],
         },
       ],
     });
@@ -272,7 +229,7 @@ exports.getSubscription = async (req, res) => {
       });
     }
 
-    // Verify user is buyer or seller
+    // Verify user has access
     if (
       subscription.buyer_id !== req.user.id &&
       subscription.seller_id !== req.user.id
@@ -328,8 +285,15 @@ exports.cancelSubscription = async (req, res) => {
       });
     }
 
-    // Cancel in Stripe
-    await stripe.subscriptions.cancel(subscription.stripe_subscription_id);
+    // Only cancel in Stripe if it's a real Stripe subscription
+    if (!subscription.stripe_subscription_id.startsWith("TEST_")) {
+      try {
+        await stripe.subscriptions.cancel(subscription.stripe_subscription_id);
+      } catch (stripeError) {
+        console.error("Stripe cancellation error:", stripeError.message);
+        // Continue anyway - maybe subscription doesn't exist in Stripe
+      }
+    }
 
     // Update subscription
     subscription.status = "cancelled";
@@ -339,25 +303,27 @@ exports.cancelSubscription = async (req, res) => {
     res.status(200).json({
       success: true,
       subscription,
-      message: "Subscription cancelled successfully",
+      message:
+        "Subscription cancelled successfully. You'll keep access until the end of the current billing period.",
     });
   } catch (error) {
     console.error("Cancel Subscription Error:", error);
     res.status(500).json({
       success: false,
       error: "Failed to cancel subscription",
+      details: error.message,
     });
   }
 };
 
 /**
- * @desc    Upload monthly pack for subscription
- * @route   POST /api/subscriptions/:service_id/upload-pack
+ * @desc    Upload subscription pack (seller)
+ * @route   POST /api/subscriptions/:serviceId/upload-pack
  * @access  Private (Seller only)
  */
 exports.uploadSubscriptionPack = async (req, res) => {
   try {
-    const { service_id } = req.params;
+    const { serviceId } = req.params;
     const { title, description, file_urls, file_size_mb } = req.body;
 
     if (
@@ -372,8 +338,8 @@ exports.uploadSubscriptionPack = async (req, res) => {
       });
     }
 
-    // Get service
-    const service = await Service.findByPk(service_id);
+    // Get service and verify ownership
+    const service = await Service.findByPk(serviceId);
 
     if (!service) {
       return res.status(404).json({
@@ -382,25 +348,23 @@ exports.uploadSubscriptionPack = async (req, res) => {
       });
     }
 
-    // Verify seller
     if (service.seller_id !== req.user.id) {
       return res.status(403).json({
         success: false,
-        error: "Not authorized to upload pack for this service",
+        error: "Not authorized to upload packs for this service",
       });
     }
 
-    // Verify service is subscription type
     if (service.type !== "subscription") {
       return res.status(400).json({
         success: false,
-        error: "Service is not a subscription",
+        error: "Service must be of type 'subscription'",
       });
     }
 
     // Create subscription pack
     const pack = await SubscriptionPack.create({
-      service_id: service.id,
+      service_id: serviceId,
       seller_id: req.user.id,
       title,
       description: description || "",
@@ -409,10 +373,10 @@ exports.uploadSubscriptionPack = async (req, res) => {
       uploaded_at: new Date(),
     });
 
-    // Get active subscribers count
+    // Count active subscribers
     const subscriberCount = await Subscription.count({
       where: {
-        service_id: service.id,
+        service_id: serviceId,
         status: "active",
       },
     });
@@ -421,7 +385,9 @@ exports.uploadSubscriptionPack = async (req, res) => {
       success: true,
       pack,
       subscriberCount,
-      message: `Pack uploaded successfully. ${subscriberCount} subscriber(s) will be notified.`,
+      message: `Pack uploaded successfully and is now available to ${subscriberCount} active subscriber${
+        subscriberCount !== 1 ? "s" : ""
+      }`,
     });
   } catch (error) {
     console.error("Upload Subscription Pack Error:", error);
@@ -434,16 +400,17 @@ exports.uploadSubscriptionPack = async (req, res) => {
 
 /**
  * @desc    Get subscription packs for a service
- * @route   GET /api/subscriptions/:service_id/packs
- * @access  Private (Subscriber or Seller)
+ * @route   GET /api/subscriptions/:serviceId/packs
+ * @access  Private (Active subscriber or seller)
  */
 exports.getSubscriptionPacks = async (req, res) => {
   try {
-    const { service_id } = req.params;
+    const { serviceId } = req.params;
     const { page = 1, limit = 20 } = req.query;
 
-    // Check if user is subscriber or seller
-    const service = await Service.findByPk(service_id);
+    // Check if user is seller or active subscriber
+    const service = await Service.findByPk(serviceId);
+
     if (!service) {
       return res.status(404).json({
         success: false,
@@ -452,25 +419,28 @@ exports.getSubscriptionPacks = async (req, res) => {
     }
 
     const isSeller = service.seller_id === req.user.id;
-    const isSubscriber = await Subscription.findOne({
+
+    // Check if user has active subscription
+    const hasSubscription = await Subscription.findOne({
       where: {
-        service_id: service_id,
         buyer_id: req.user.id,
+        service_id: serviceId,
         status: "active",
       },
     });
 
-    if (!isSeller && !isSubscriber) {
+    if (!isSeller && !hasSubscription) {
       return res.status(403).json({
         success: false,
-        error: "You must be subscribed to view packs",
+        error: "You must have an active subscription to view packs",
       });
     }
 
-    // Fetch packs
+    // Get packs
     const offset = (page - 1) * limit;
+
     const { count, rows: packs } = await SubscriptionPack.findAndCountAll({
-      where: { service_id },
+      where: { service_id: serviceId },
       order: [["uploaded_at", "DESC"]],
       limit: parseInt(limit),
       offset: parseInt(offset),
@@ -496,68 +466,205 @@ exports.getSubscriptionPacks = async (req, res) => {
 };
 
 /**
- * @desc    Get subscription statistics
- * @route   GET /api/subscriptions/stats
- * @access  Private
+ * @desc    Get single subscription pack
+ * @route   GET /api/subscriptions/packs/:packId
+ * @access  Private (Active subscriber or seller)
  */
-exports.getSubscriptionStats = async (req, res) => {
+exports.getSubscriptionPack = async (req, res) => {
   try {
-    const { role = "buyer" } = req.query;
-
-    const whereClause =
-      role === "buyer" ? { buyer_id: req.user.id } : { seller_id: req.user.id };
-
-    // Count by status
-    const active = await Subscription.count({
-      where: { ...whereClause, status: "active" },
+    const pack = await SubscriptionPack.findByPk(req.params.packId, {
+      include: [
+        {
+          model: Service,
+          as: "service",
+          attributes: ["id", "title", "seller_id"],
+        },
+      ],
     });
 
-    const cancelled = await Subscription.count({
-      where: { ...whereClause, status: "cancelled" },
-    });
-
-    const pastDue = await Subscription.count({
-      where: { ...whereClause, status: "past_due" },
-    });
-
-    // Total amount (for sellers)
-    let totalRevenue = 0;
-    if (role === "seller") {
-      const subscriptions = await Subscription.findAll({
-        where: { ...whereClause, status: "active" },
-        include: [
-          {
-            model: Service,
-            as: "service",
-            attributes: ["price"],
-          },
-        ],
+    if (!pack) {
+      return res.status(404).json({
+        success: false,
+        error: "Pack not found",
       });
+    }
 
-      totalRevenue = subscriptions.reduce((sum, sub) => {
-        const price = parseFloat(sub.service.price);
-        const sellerAmount = price * 0.92; // 8% platform fee
-        return sum + sellerAmount;
-      }, 0);
+    const isSeller = pack.seller_id === req.user.id;
+
+    // Check if user has active subscription
+    const hasSubscription = await Subscription.findOne({
+      where: {
+        buyer_id: req.user.id,
+        service_id: pack.service_id,
+        status: "active",
+      },
+    });
+
+    if (!isSeller && !hasSubscription) {
+      return res.status(403).json({
+        success: false,
+        error: "You must have an active subscription to view this pack",
+      });
     }
 
     res.status(200).json({
       success: true,
-      stats: {
-        active,
-        cancelled,
-        past_due,
-        total: active + cancelled + pastDue,
-        ...(role === "seller"
-          ? { monthlyRevenue: totalRevenue.toFixed(2) }
-          : {}),
-      },
+      pack,
     });
   } catch (error) {
-    console.error("Get Subscription Stats Error:", error);
+    console.error("Get Subscription Pack Error:", error);
     res.status(500).json({
       success: false,
-      error: "Failed to fetch subscription stats",
+      error: "Failed to fetch pack",
+    });
+  }
+};
+
+/**
+ * @desc    Get seller's subscribers
+ * @route   GET /api/subscriptions/subscribers
+ * @access  Private (Seller only)
+ */
+exports.getSubscribers = async (req, res) => {
+  try {
+    const { service_id, status = "active" } = req.query;
+
+    const where = { seller_id: req.user.id };
+
+    if (service_id) {
+      where.service_id = service_id;
+    }
+
+    if (status) {
+      where.status = status;
+    }
+
+    const subscribers = await Subscription.findAll({
+      where,
+      order: [["created_at", "DESC"]],
+      include: [
+        {
+          model: User,
+          as: "buyer",
+          attributes: ["id", "username", "display_name", "email", "avatar_url"],
+        },
+        {
+          model: Service,
+          as: "service",
+          attributes: ["id", "title", "price"],
+        },
+      ],
+    });
+
+    // Calculate stats
+    const stats = {
+      total: subscribers.length,
+      active: subscribers.filter((s) => s.status === "active").length,
+      cancelled: subscribers.filter((s) => s.status === "cancelled").length,
+      monthlyRevenue: subscribers
+        .filter((s) => s.status === "active")
+        .reduce((sum, s) => {
+          const price = parseFloat(s.service.price);
+          const platformFee = (price * PLATFORM_FEE_PERCENT) / 100;
+          return sum + (price - platformFee);
+        }, 0)
+        .toFixed(2),
+    };
+
+    res.status(200).json({
+      success: true,
+      subscribers,
+      stats,
+    });
+  } catch (error) {
+    console.error("Get Subscribers Error:", error);
+    res.status(500).json({
+      success: false,
+      error: "Failed to fetch subscribers",
+    });
+  }
+};
+
+// ==========================================
+// TEST ENDPOINT - REMOVE IN PRODUCTION
+// ==========================================
+exports.testCreateSubscription = async (req, res) => {
+  try {
+    const { service_id } = req.body;
+
+    if (!service_id) {
+      return res.status(400).json({
+        success: false,
+        error: "Service ID is required",
+      });
+    }
+
+    const service = await Service.findByPk(service_id);
+
+    if (!service) {
+      return res.status(404).json({
+        success: false,
+        error: "Service not found",
+      });
+    }
+
+    if (service.type !== "subscription") {
+      return res.status(400).json({
+        success: false,
+        error: "Service must be of type 'subscription'",
+      });
+    }
+
+    const existingSubscription = await Subscription.findOne({
+      where: {
+        buyer_id: req.user.id,
+        service_id: service.id,
+        status: "active",
+      },
+    });
+
+    if (existingSubscription) {
+      return res.status(400).json({
+        success: false,
+        error: "You already have an active subscription to this service",
+      });
+    }
+
+    const amount = parseFloat(service.price);
+    const platformFee = (amount * PLATFORM_FEE_PERCENT) / 100;
+
+    const subscription = await Subscription.create({
+      buyer_id: req.user.id,
+      seller_id: service.seller_id,
+      service_id: service.id,
+      stripe_subscription_id: "TEST_SUB_" + Date.now(),
+      status: "active",
+      current_period_start: new Date(),
+      current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    });
+
+    await Transaction.create({
+      order_id: null,
+      buyer_id: req.user.id,
+      seller_id: service.seller_id,
+      type: "subscription",
+      amount: amount.toFixed(2),
+      platform_fee: platformFee.toFixed(2),
+      stripe_payment_id: "TEST_" + Date.now(),
+      status: "completed",
+    });
+
+    res.status(201).json({
+      success: true,
+      subscription,
+      message: "TEST subscription created (no real Stripe)",
+    });
+  } catch (error) {
+    console.error("Test Create Subscription Error:", error);
+    res.status(500).json({
+      success: false,
+      error: "Failed to create test subscription",
+      details: error.message,
     });
   }
 };

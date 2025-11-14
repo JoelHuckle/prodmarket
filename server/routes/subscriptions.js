@@ -7,29 +7,21 @@ const subscriptionController = require("../controllers/subscriptionController");
 // All routes require authentication
 router.use(protect);
 
-// Create new subscription
+// Subscription management
 router.post("/", subscriptionController.createSubscription);
-
-// Get user's subscriptions
 router.get("/my", subscriptionController.getMySubscriptions);
-
-// Get subscription statistics
-router.get("/stats", subscriptionController.getSubscriptionStats);
-
-// Get subscription by ID
-router.get("/:id", subscriptionController.getSubscription);
-
-// Cancel subscription
+router.get("/subscribers", isSeller, subscriptionController.getSubscribers);
+router.get("/:id", subscriptionController.getSubscriptionById);
 router.delete("/:id", subscriptionController.cancelSubscription);
+router.post("/test-create", subscriptionController.testCreateSubscription);
 
-// Upload monthly pack (seller only)
+// Subscription packs
 router.post(
-  "/:service_id/upload-pack",
+  "/:serviceId/upload-pack",
   isSeller,
   subscriptionController.uploadSubscriptionPack
 );
-
-// Get packs for a service
-router.get("/:service_id/packs", subscriptionController.getSubscriptionPacks);
+router.get("/:serviceId/packs", subscriptionController.getSubscriptionPacks);
+router.get("/packs/:packId", subscriptionController.getSubscriptionPack);
 
 module.exports = router;
