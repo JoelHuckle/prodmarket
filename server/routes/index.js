@@ -11,6 +11,7 @@ const contractRoutes = require("./contracts");
 const subscriptionRoutes = require("./subscriptions");
 const downloadRoutes = require("./downloads");
 const disputeRoutes = require("./disputes");
+const adminRoutes = require("./admin");
 
 router.use("/auth", authRoutes);
 router.use("/users", userRoutes);
@@ -22,5 +23,6 @@ router.use("/contracts", contractRoutes);
 router.use("/subscriptions", subscriptionRoutes);
 router.use("/downloads", downloadRoutes);
 router.use("/disputes", disputeRoutes);
+router.use("/admin", adminRoutes);
 
 module.exports = router;

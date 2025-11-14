@@ -49,6 +49,11 @@ module.exports = (sequelize) => {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
+      is_admin: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+        comment: "Admin privileges for platform management",
+      },
       stripe_account_id: {
         type: DataTypes.STRING(255),
         allowNull: true,

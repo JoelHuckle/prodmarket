@@ -82,6 +82,17 @@ User.hasMany(Dispute, {
   as: "raisedDisputes",
 });
 
+Transaction.belongsTo(User, { foreignKey: "buyer_id", as: "buyer" });
+Transaction.belongsTo(User, { foreignKey: "seller_id", as: "seller" });
+Transaction.belongsTo(Order, { foreignKey: "order_id", as: "order" });
+
+User.hasMany(Transaction, { foreignKey: "buyer_id", as: "buyerTransactions" });
+User.hasMany(Transaction, {
+  foreignKey: "seller_id",
+  as: "sellerTransactions",
+});
+Order.hasMany(Transaction, { foreignKey: "order_id" });
+
 module.exports = {
   sequelize,
   User,
