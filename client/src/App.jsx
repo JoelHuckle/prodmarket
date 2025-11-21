@@ -14,9 +14,11 @@ import ServiceDetailPage from './pages/ServiceDetailPage';
 import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
 import OrderTrackingPage from './pages/OrderTrackingPage';
+import BuyerDashboard from './pages/BuyerDashboard';
+import OrdersPage from './pages/OrdersPage';
 
-// import DashboardPage from './pages/DashboardPage';
-// import OrdersPage from './pages/OrdersPage';
+
+
 // import SubscriptionsPage from './pages/SubscriptionsPage';
 // import SettingsPage from './pages/SettingsPage';
 
@@ -40,8 +42,8 @@ export default function App() {
                 <Route path="cart" element={<CartPage />} />
                 <Route path="checkout" element={<CheckoutPage />} />
                 <Route path="orders/:id" element={<OrderTrackingPage />} />
-                {/* <Route path="dashboard" element={<DashboardPage />} /> */}
-                {/* <Route path="orders" element={<OrdersPage />} /> */}
+                <Route path="dashboard" element={<BuyerDashboard />} />
+                <Route path="orders" element={<OrdersPage />} />                      
                 {/* <Route path="subscriptions" element={<SubscriptionsPage />} /> */}
                 {/* <Route path="settings" element={<SettingsPage />} /> */}
                 
