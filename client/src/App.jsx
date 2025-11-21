@@ -9,7 +9,7 @@ import HomePage from './pages/HomePage';
 import BrowsePage from './pages/BrowsePage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
-// import ServiceDetailPage from './pages/ServiceDetailPage';
+import ServiceDetailPage from './pages/ServiceDetailPage';
 // import DashboardPage from './pages/DashboardPage';
 // import OrdersPage from './pages/OrdersPage';
 // import SubscriptionsPage from './pages/SubscriptionsPage';
@@ -30,7 +30,7 @@ export default function App() {
               <Route path="browse" element={<BrowsePage />} />
               <Route path="login" element={<LoginPage />} />
               <Route path="signup" element={<SignupPage />} />
-              {/* <Route path="services/:id" element={<ServiceDetailPage />} /> */}
+              <Route path="services/:id" element={<ServiceDetailPage />} />
               {/* <Route path="dashboard" element={<DashboardPage />} /> */}
               {/* <Route path="orders" element={<OrdersPage />} /> */}
               {/* <Route path="subscriptions" element={<SubscriptionsPage />} /> */}
