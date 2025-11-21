@@ -1,12 +1,27 @@
 // utils/api.js
 // Centralized API helper
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5001";
+// Get API URL - with validation
+const getApiUrl = () => {
+  const url = import.meta.env.VITE_API_URL;
+  if (url) return url;
+
+  // Fallback for development
+  console.warn("VITE_API_URL not set, using localhost:5001");
+  return "http://localhost:5001";
+};
+
+const API_URL = getApiUrl();
 
 const getToken = () => localStorage.getItem("token");
 
 async function apiFetch(endpoint, options = {}) {
   const token = getToken();
+
+  const url = `${API_URL}${endpoint}`;
+
+  // Debug log
+  console.log("Fetching:", url);
 
   const config = {
     headers: {
@@ -17,7 +32,7 @@ async function apiFetch(endpoint, options = {}) {
     ...options,
   };
 
-  const res = await fetch(`${API_URL}${endpoint}`, config);
+  const res = await fetch(url, config);
   const data = await res.json();
 
   if (!res.ok) {
@@ -125,10 +140,15 @@ export const disputes = {
 
 // Payments
 export const payments = {
-  createIntent: (orderId) =>
+  createIntent: (data) =>
     apiFetch("/api/payments/create-intent", {
       method: "POST",
-      body: JSON.stringify({ order_id: orderId }),
+      body: JSON.stringify(data),
+    }),
+  confirmPayment: (data) =>
+    apiFetch("/api/payments/confirm", {
+      method: "POST",
+      body: JSON.stringify(data),
     }),
   getHistory: () => apiFetch("/api/payments/history"),
 };
