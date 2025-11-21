@@ -6,7 +6,7 @@ import Layout from './components/Layout/Layout';
 
 // Pages (create these as you build)
 import HomePage from './pages/HomePage';
-// import BrowsePage from './pages/BrowsePage';
+import BrowsePage from './pages/BrowsePage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 // import ServiceDetailPage from './pages/ServiceDetailPage';
@@ -27,7 +27,7 @@ export default function App() {
             {/* Main Layout */}
             <Route path="/" element={<Layout />}>
               <Route index element={<HomePage />} />
-              {/* <Route path="browse" element={<BrowsePage />} /> */}
+              <Route path="browse" element={<BrowsePage />} />
               <Route path="login" element={<LoginPage />} />
               <Route path="signup" element={<SignupPage />} />
               {/* <Route path="services/:id" element={<ServiceDetailPage />} /> */}
