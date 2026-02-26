@@ -1,0 +1,20 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 30
+    },
+    "auditLog": "/Users/joelhuckle/Documents/prodmarket/server/logs/.4edd92dedb91d05cbd216bd1859644038225060d-audit.json",
+    "files": [
+        {
+            "date": 1771868703817,
+            "name": "/Users/joelhuckle/Documents/prodmarket/server/logs/audit-2026-02-23.log",
+            "hash": "7d4e369781973e6693d1b0e998a0e12ee96cab415e2c7690ea1b80ca639d657e"
+        },
+        {
+            "date": 1771946857775,
+            "name": "/Users/joelhuckle/Documents/prodmarket/server/logs/audit-2026-02-24.log",
+            "hash": "47167a3f448099fbe7821c3f7c369025d6fd0be2881a10732b6809d7c0b2a9dd"
+        }
+    ],
+    "hashType": "sha256"
+}
